@@ -22,10 +22,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v5
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python ${{ matrix.python }}
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ matrix.python }}
 
     - name: Install Docker Compose
       run: |
