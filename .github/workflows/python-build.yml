@@ -14,17 +14,18 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: "3.13"
-        cache: 'poetry'
 
     - name: Install Poetry
       run: |
         python -m pip install --upgrade pip
         pip install poetry
+        echo "Poetry installed at: $(which poetry)"
+        echo "PATH: $PATH"
 
-    - name: Check versions
+    - name: Verify Poetry installation
       run: |
         python --version
-        poetry --version
+        which poetry
 
     - name: Install dependencies with Poetry
       run: poetry install --no-root
