@@ -1,34 +1,50 @@
-name: Python Build
+name: Python application
 
 on: [push]
 
 jobs:
   build:
+    strategy:
+      fail-fast: false
+      matrix:
+        python: [3.13]
     runs-on: ubuntu-latest
-    
+    services:
+      db:
+        image: postgres:17
+        ports:
+          -5434:5432
+        env:
+          POSTGRES_USER: bookstore_dev
+          POSTGRES_PASSWORD: bookstore_dev
+          POSTGRES_DB: bookstore_dev_db
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
-    - name: Set up Python 3.13
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
-        python-version: "3.13"
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Docker Compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
 
     - name: Install Poetry
       run: |
+        python -m ensurepip
         python -m pip install --upgrade pip
-        pip install poetry
-        echo "Poetry installed at: $(which poetry)"
-        echo "PATH: $PATH"
+        python -m pip install --upgrade poetry
+        
 
-    - name: Verify Poetry installation
-      run: |
-        python --version
-        which poetry
+    - name: Install dependencies
+      shell: bash
+      run: poetry install
 
-    - name: Install dependencies with Poetry
-      run: poetry install --no-root
+    - name: Start Docker Compose services
+      run: docker-compose up -d --build
 
     - name: Run tests
-      run: poetry run python manage.py test
+      run: docker-compose exec -T web python manage.py test
