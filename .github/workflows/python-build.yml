@@ -41,5 +41,5 @@ jobs:
     - name: Copiar env.dev para .env
       run: cp env.dev .env
 
-    - name: Run tests
+    - name: Run test
       run: poetry run python manage.py test
