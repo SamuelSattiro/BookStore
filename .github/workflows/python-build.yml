@@ -18,6 +18,11 @@ jobs:
           POSTGRES_USER: bookstore_dev
           POSTGRES_PASSWORD: bookstore_dev
           POSTGRES_DB: bookstore_dev_db
+        options: >-
+          --health-cmd="pg_isready -U bookstore_dev -d bookstore_dev_db"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
@@ -27,11 +32,6 @@ jobs:
       with:
         python-version: ${{ matrix.python }}
 
-    - name: Install Docker Compose
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker-compose
-
     - name: Install Poetry
       run: |
         python -m ensurepip
@@ -40,11 +40,7 @@ jobs:
         
 
     - name: Install dependencies
-      shell: bash
       run: poetry install
 
-    - name: Start Docker Compose services
-      run: docker-compose up -d --build
-
     - name: Run tests
-      run: docker-compose exec -T web python manage.py test
+      run: poetry run python manage.py test
