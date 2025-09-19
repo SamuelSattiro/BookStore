@@ -148,10 +148,11 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-vl(=a+f_ovnf0avpgo&#^t&=%v1l1wg1$80fjwlz1ei7(uuzr6")
 
-DEBUG = int(os.environ.get("DEBUG", default=0))
+DEBUG = int(os.environ.get("DEBUG", default=1))
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOST", "localhost").split(" ")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOST", "localhost 127.0.0.1 [::1]").split(" ")
+

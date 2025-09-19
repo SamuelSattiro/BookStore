@@ -38,17 +38,5 @@ jobs:
     - name: Run migrations
       run: poetry run python manage.py migrate
 
-    - name: Criar arquivo .env no CI
-      run: |
-        echo "DEBUG=1" >> .env
-        echo "SECRET_KEY=foo" >> .env
-        echo "DJANGO_ALLOWED_HOST=localhost 127.0.0.1[::1]" >> .env
-        echo "SQL_ENGINE=django.db.backends.postgresql" >> .env
-        echo "SQL_DATABASE=bookstore_dev_db" >> .env
-        echo "SQL_USER=bookstore_dev" >> .env
-        echo "SQL_PASSWORD=bookstore_dev" >> .env
-        echo "SQL_HOST=db" >> .env
-        echo "SQL_PORT=5432" >> .env
-
     - name: Run test
       run: poetry run python manage.py test
