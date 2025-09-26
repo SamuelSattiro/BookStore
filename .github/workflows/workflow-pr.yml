@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
-      - uses: actions/checkout@v5
+        uses: actions/checkout@v5
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -32,8 +32,8 @@ jobs:
         continue-on-error: true
         with:
           reporter: 'github-pr-review'
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cache Poetry virtualenv
         uses: actions/cache@v3
