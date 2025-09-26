@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
+import sys
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -82,16 +83,31 @@ WSGI_APPLICATION = "bookstore.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
-        "USER": os.environ.get("SQL_USER", "user"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-        "HOST": os.environ.get("SQL_HOST", "localhost"),
-        "PORT": os.environ.get("SQL_PORT", "5432"),
+# Database
+# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+import sys
+
+if 'pythonanywhere' in sys.platform.lower():
+    # Configuração para PythonAnywhere
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    # Configuração local (original)
+    DATABASES = {
+        "default": {
+            "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+            "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
+            "USER": os.environ.get("SQL_USER", "user"),
+            "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+            "HOST": os.environ.get("SQL_HOST", "localhost"),
+            "PORT": os.environ.get("SQL_PORT", "5432"),
+        }
+    }
 
 
 # Password validation
@@ -155,7 +171,11 @@ DEBUG = int(os.environ.get("DEBUG", default=1))
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
-ALLOWED_HOSTS = ["localhost 127.0.0.1", "samuelsattiro.pythonanywhere.com"]
+if 'pythonanywhere' in sys.platform.lower():
+    ALLOWED_HOSTS = ['samuelsattiro.pythonanywhere.com', 'localhost', '127.0.0.1']
+else:
+    # Configuração local
+    ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOST", "localhost 127.0.0.1 [::1]").split(" ")
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
